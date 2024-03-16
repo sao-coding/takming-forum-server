@@ -56,6 +56,7 @@ app.use(
       "/favicon.ico",
       "/auth/google",
       "/auth/callback/google",
+      { url: "/api/post", methods: ["GET"] },
       { url: "/api/line-notify", methods: ["GET"] },
       { url: "/api/teacher", methods: ["GET"] },
       { url: "/api/book", methods: ["GET"] }

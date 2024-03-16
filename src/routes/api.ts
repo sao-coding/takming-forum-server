@@ -4,6 +4,7 @@ import express from "express"
 import apiBook from "./book"
 import apiCourse from "./course"
 import apiLineNotify from "./line-notify"
+import apiPost from "./post"
 import apiComment from "./review"
 import apiTeacher from "./teacher"
 import apiUser from "./user"
@@ -16,3 +17,4 @@ api.use("/", apiBook)
 api.use("/", apiTeacher)
 api.use("/", apiCourse)
 api.use("/", apiComment)
+api.use("/", apiPost)

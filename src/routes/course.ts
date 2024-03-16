@@ -14,6 +14,7 @@ const prisma = new PrismaClient()
 api.get("/course", async (req: Request, res: Response) => {
   const teacherId = req.query.teacher as string
   const courseId = req.query.course as string
+  const search = req.query.search as string
   // 獲取該教師的所有課程資訊
   // 獲取課程評分array 做平均
   // 獲取評論數量
@@ -46,7 +47,7 @@ api.get("/course", async (req: Request, res: Response) => {
       }
     })
 
-    res.json({
+    return res.json({
       msg: "獲取課程資訊成功",
       courses: coursesInfo
     })
@@ -76,7 +77,7 @@ api.get("/course", async (req: Request, res: Response) => {
 
     const totalRating = course?.Review.reduce((acc, cur) => acc + cur.rating, 0) || 0
 
-    res.json({
+    return res.json({
       msg: "獲取課程資訊成功",
       course: {
         id: course?.id,
@@ -90,6 +91,50 @@ api.get("/course", async (req: Request, res: Response) => {
       }
     })
   }
+
+  // 獲取所有課程資訊
+  const courses = await prisma.course.findMany({
+    where: {
+      name: {
+        contains: search
+      }
+    },
+    include: {
+      teacher: {
+        select: {
+          name: true
+        }
+      },
+      Review: {
+        select: {
+          rating: true
+        }
+      }
+    },
+    orderBy: {
+      updatedAt: "desc"
+    }
+  })
+
+  const coursesInfo = courses.map((course) => {
+    const ratingLength = course.Review.length
+    const totalRating = course.Review.reduce((acc, cur) => acc + cur.rating, 0)
+    return {
+      id: course.id,
+      name: course.name,
+      teacherId: course.teacherId,
+      teacher: {
+        name: course.teacher.name
+      },
+      totalRating: ratingLength,
+      averageRating: ratingLength === 0 ? 0 : (totalRating / ratingLength).toFixed(1)
+    }
+  })
+
+  res.json({
+    msg: "獲取課程資訊成功",
+    courses: coursesInfo
+  })
 })
 
 // 新增課程資訊

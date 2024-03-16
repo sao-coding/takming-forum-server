@@ -39,7 +39,7 @@ api.get("/teacher", async (req: Request, res: Response) => {
       }
     },
     orderBy: {
-      createdAt: "desc"
+      updatedAt: "desc"
     },
     select: {
       id: true,

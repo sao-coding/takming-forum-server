@@ -141,6 +141,25 @@ api.post("/review", async (req: Request, res: Response) => {
     }
   })
 
+  // 把老師的 updateAt 更新
+  const teacherId = await prisma.course.findUnique({
+    where: {
+      id: courseId
+    },
+    select: {
+      teacherId: true
+    }
+  })
+
+  await prisma.teacher.update({
+    where: {
+      id: teacherId?.teacherId
+    },
+    data: {
+      updatedAt: new Date()
+    }
+  })
+
   res.json({ msg: "新增評論成功", comment: newComment })
 })
 
@@ -177,6 +196,25 @@ api.patch("/review", async (req: Request, res: Response) => {
   await prisma.course.update({
     where: {
       id: courseId
+    },
+    data: {
+      updatedAt: new Date()
+    }
+  })
+
+  // 把老師的 updateAt 更新
+  const teacherId = await prisma.course.findUnique({
+    where: {
+      id: courseId
+    },
+    select: {
+      teacherId: true
+    }
+  })
+
+  await prisma.teacher.update({
+    where: {
+      id: teacherId?.teacherId
     },
     data: {
       updatedAt: new Date()
