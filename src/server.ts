@@ -39,7 +39,8 @@ const app: Express = express()
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    // origin: process.env.FRONTEND_URL,
+    origin: ["https://localhost", "https://takming-forum.sao-x.com"],
     credentials: true,
     optionsSuccessStatus: 200
   })
