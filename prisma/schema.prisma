@@ -27,7 +27,6 @@ model User {
   familyName  String
   picture     String
   email       String        @unique
-  locale      String
   role        String        @default("USER")
   createdAt   DateTime      @default(now())
   Book        Book[]
