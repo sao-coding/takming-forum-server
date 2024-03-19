@@ -167,11 +167,18 @@ api.patch("/book", async (req: Request, res: Response) => {
 })
 
 // 刪除書籍
-api.delete("/book/:id", async (req: Request, res: Response) => {
+api.delete("/book", async (req: Request, res: Response) => {
   const auth = req.auth as User
+  const id = req.query.id as string
+
+  if (!id) {
+    res.status(400).json({ msg: "缺少書籍 id" })
+    return
+  }
+
   const book = await prisma.book.findUnique({
     where: {
-      id: req.params.id
+      id
     },
     select: {
       userId: true
@@ -185,7 +192,7 @@ api.delete("/book/:id", async (req: Request, res: Response) => {
 
   await prisma.book.delete({
     where: {
-      id: req.params.id
+      id
     }
   })
 
